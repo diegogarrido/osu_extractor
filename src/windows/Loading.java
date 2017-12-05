@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import javax.swing.JOptionPane;
 
 public class Loading extends javax.swing.JFrame implements Runnable {
 
@@ -114,7 +113,6 @@ public class Loading extends javax.swing.JFrame implements Runnable {
                                         copyFile(subData[k], new File(objective + "\\" + names[i] + ".mp3"));
                                         first = false;
                                     } catch (Exception e) {
-                                        JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
                                     }
                                 } else {
                                     try {
@@ -122,7 +120,6 @@ public class Loading extends javax.swing.JFrame implements Runnable {
                                         jLabel1.setText("Extracting... (" + i + "/" + files.length + ")");
                                         copyFile(subData[k], new File(objective + "\\" + names[i] + " (" + cont++ + ")" + ".mp3"));
                                     } catch (Exception e) {
-                                        JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }
                             }
@@ -135,7 +132,6 @@ public class Loading extends javax.swing.JFrame implements Runnable {
                                 copyFile(data[j], new File(objective + "\\" + names[i] + ".mp3"));
                                 first = false;
                             } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
                             try {
@@ -143,14 +139,12 @@ public class Loading extends javax.swing.JFrame implements Runnable {
                                 jLabel1.setText("Extracting... (" + i + "/" + files.length + ")");
                                 copyFile(data[j], new File(objective + "\\" + names[i] + " (" + cont++ + ")" + ".mp3"));
                             } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
                             }
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
         }
         this.dispose();
     }
