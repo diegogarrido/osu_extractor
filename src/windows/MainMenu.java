@@ -1,15 +1,26 @@
 package windows;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Properties;
 import javax.swing.JFileChooser;
 
 public class MainMenu extends javax.swing.JFrame {
 
     File sourceD = new File("");
     File destinationD = new File("");
+    Properties p = new Properties();
 
     public MainMenu() {
         initComponents();
+        try {
+            p.loadFromXML(new FileInputStream("properties.xml"));
+            sourceText.setText(p.getProperty("lastSource", "Default is in: AppData/Local/osu!") + "//songs");
+            destinationText.setText(p.getProperty("lastDestination", "Destination Folder") + "//Songs");
+        } catch (Exception e) {
+            System.out.println("error" + e.toString());
+        }
         this.setLocationRelativeTo(null);
         jFileChooser1.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     }
@@ -64,41 +75,39 @@ public class MainMenu extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(125, 125, 125)
-                .addComponent(jLabel1)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
+                .addContainerGap(58, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(go, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(157, 157, 157))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(destination, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(source, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(sourceText)
-                            .addComponent(destinationText, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(51, 51, 51))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(go, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(destinationText)
+                                .addComponent(sourceText, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(48, 48, 48))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(121, 121, 121))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(source, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sourceText))
+                    .addComponent(sourceText, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(destination)
                     .addComponent(destinationText, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
                 .addComponent(go, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
@@ -106,6 +115,10 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void sourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceActionPerformed
         jFileChooser1.setDialogTitle("Select osu! folder");
+        try {
+            jFileChooser1.setCurrentDirectory(new File(p.getProperty("lastSource","C:\\Users")));
+        } catch (Exception e) {
+        }
         jFileChooser1.showOpenDialog(this);
         String s = "null";
         try {
@@ -113,6 +126,8 @@ public class MainMenu extends javax.swing.JFrame {
         } catch (Exception e) {
         }
         if (!s.equals("null")) {
+            p.setProperty("lastSource", s);
+            saveProps();
             sourceD = new File(s + "/songs");
             sourceText.setText(sourceD.getAbsolutePath());
         }
@@ -120,6 +135,10 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void destinationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_destinationActionPerformed
         jFileChooser1.setDialogTitle("Select destination (will create a new folder named Songs)");
+        try {
+            jFileChooser1.setCurrentDirectory(new File(p.getProperty("lastDestination")));
+        } catch (Exception e) {
+        }
         jFileChooser1.showOpenDialog(this);
         String s = "null";
         try {
@@ -127,14 +146,23 @@ public class MainMenu extends javax.swing.JFrame {
         } catch (Exception e) {
         }
         if (!s.equals("null")) {
+            p.setProperty("lastDestination", s);
+            saveProps();
             destinationD = new File(s + "/Songs");
             destinationText.setText(destinationD.getAbsolutePath());
         }
     }//GEN-LAST:event_destinationActionPerformed
 
+    private void saveProps() {
+        try {
+            p.storeToXML(new FileOutputStream("properties.xml"), "");
+        } catch (Exception e) {
+        }
+    }
+
     private void goActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goActionPerformed
         this.setEnabled(false);
-        new Thread(new Loading(this, sourceD, destinationD)).start();
+        new Thread(new Loading(this, sourceText.getText(), destinationText.getText())).start();
     }//GEN-LAST:event_goActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

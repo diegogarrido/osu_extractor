@@ -15,11 +15,12 @@ public class Loading extends javax.swing.JFrame implements Runnable {
     File path;
     String objective;
 
-    public Loading(Component parent, File source, File dest) {
+    public Loading(Component parent, String source, String dest) {
         p = parent;
-        path = source;
-        objective = dest.getAbsolutePath();
-        dest.mkdirs();
+        path = new File(source);
+        objective = dest;
+        File f = new File(objective);
+        f.mkdirs();
         initComponents();
         this.setLocationRelativeTo(null);
     }
